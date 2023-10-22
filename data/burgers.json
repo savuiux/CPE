@@ -1,0 +1,38 @@
+{
+  "burgers": {
+    "burger": [
+      {
+        "id": "burger_a",
+        "name": "Burger A",
+        "price": "559.99",
+        "image": "assets/images/basic_burger.png",
+        "description": "Burger A Sample Description",
+        "rating": "4.5"
+      },
+      {
+        "id": "burger_b",
+        "name": "Burger B",
+        "price": "589.00",
+        "image": "assets/images/medium_burger.png",
+        "description": "Burger B HEHEHEH",
+        "rating": "4"
+      },
+      {
+        "id": "burger_c",
+        "name": "Burger C",
+        "price": "659.50",
+        "image": "assets/images/lburger.png",
+        "description": "This is Special Burger C",
+        "rating": "5"
+      },
+      {
+        "id": "burger_d",
+        "name": "Burger D",
+        "price": "999.99",
+        "image": "assets/images/special_burger.png",
+        "description": "The last burger",
+        "rating": "5"
+      }
+    ]
+  }
+}

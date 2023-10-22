@@ -1,0 +1,22 @@
+{
+  "reviews": [
+    {
+        "name": "Reviewer 1",
+        "image": "assets/images/review1.jpg",
+        "description": "Burger A Sample Description",
+        "rating": "5"
+    },
+    {
+        "name": "Another Review",
+        "image": "assets/images/review2.jpg",
+        "description": "Burger B HEHEHEH",
+        "rating": "5"
+    },
+    {
+        "name": "Last Reviewer",
+        "image": "assets/images/review3.jpg",
+        "description": "This is Special Burger C",
+        "rating": "5"
+    }
+   ]
+}

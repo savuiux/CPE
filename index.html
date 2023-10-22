@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>CPE's Special Burger</title>
+    <link rel="stylesheet" type="text/css" href="style/style.css" media="screen" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/1571a8b9bd.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <main>
+        <header id="main-header" class="container">
+            <div class="logo">
+                <img src="assets/images/Logo.png" width="200"/>
+            </div>
+
+            <div class="side-menu">
+                <h3 class="cart" id="open_cart" onclick="open_cart()"><i class="fa-solid fa-cart-shopping"></i><span id="cart_count"></span></h3>
+                <h3 class="menu"><a href="#best-sellers" class="light"><i class="fa-solid fa-bars margin-right-5"></i>Menu</a></h3> 
+            </div>
+        </header>
+        <section id="hero">
+            <div class="overlay"></div>
+            <div class="hero-content">
+                <h1 class="light">Lorem Ipsum</h1>
+                <p class="light content-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                <button class="main-button pointer"><a class="dark" href="#best-sellers">Explore Menu</a></button>
+            </div>
+        </section>
+        <section id="best-sellers">
+            <div id="side_cart" class="side-cart">
+                <div class="side-cart-content">
+                    <h2>Cart</h2>
+                    <span class="close-cart" onclick="close_cart()">&times;</span>
+                    <hr class="hr--clear" />
+                    <div id="cart_items"></div>
+                    <div id="cart_subtotal"></div>
+                    
+                    <div id="cart_buttons">
+                        <button class="tertiary-button pointer" onclick="close_cart();">Continue Shopping</button>
+                        <button class="secondary-button pointer" id="checkout_button" style="display: none;"><a href="/checkout.html" class="dark">Checkout</a></button>
+                    </div>
+                    <small class="checkout-disclaimer secondary text-center">Shipping, taxes, and discounts will be calculated at checkout.</small>
+                </div>
+            </div>
+            <div class="container">
+                <hr class="hr--clear"/>
+                <h2 class="text-center brown">Menu</h2>
+                <hr class="hr--clear"/>
+            </div>
+            <div class="container" id="best-seller-items-container">
+                <script>
+                    render_side_cart();
+                    fetch("./data/burgers.json")
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (data) {
+                        var items = data.burgers.burger;
+                        var spacer = '<hr class="hr--large" />';
+                        for (var key in items) {
+                            if (getCookie(items[key].id) == null || getCookie(items[key].id) == undefined) {
+                                setCookie(items[key].id, 0);
+                            }                            
+                            var html = `<div class="best-seller-item w-25 text-center">
+                                            <img src="` + items[key].image + `" width="245" height="172" />
+                                            <br /><br />
+                                            <span class="rating">` + render_rating(items[key].rating) + `</span>
+                                            <h5 class="best-seller-title">` + items[key].name + `</h5>
+                                            <p class="best-seller-price">₱` + items[key].price.split(".")[0] + `<sup class="sub-price">.`+ items[key].price.split(".")[1] +`</sup></p>
+                                            <button class="add-to-cart pointer" onclick="open_modal('` + items[key].id +`')">Add to Cart</button>
+                                            <div class="qty-modal" id="qty-modal-`+ items[key].id +`">
+                                                <div class="modal-content">
+                                                    <span class="close" onclick="close_modal('` + items[key].id +`')">&times;</span>
+                                                    <h1>Confirm Add</h1>
+                                                    <h3>Add `+ items[key].name  +` to cart</h3>
+                                                    <input id="qty-`+ items[key].id +`" type="number" onkeyup="calculate(this.value,'`+ items[key].price +`','`+ items[key].id +`')" placeholder="Input quantity to add to cart" class="qty-input" min="1" max="20" required />
+                                                    <br />
+                                                    <h3 id="qty-subtotal-`+ items[key].id +`"></h3>
+                                                    <br />
+                                                    <button class="cancel pointer" onclick="close_modal('` + items[key].id +`')">Cancel</button>
+                                                    <button class="add-to-cart pointer" onclick="add_to_cart('`+ items[key].id +`')">Add to Cart</button>
+                                                </div>                                                
+                                            </div>
+                                        </div>`;
+                            document.getElementById('best-seller-items-container').innerHTML += html;
+                            if (key > 0 && key%3 == 0 && key < items.length - 1) {
+                                document.getElementById('best-seller-items-container').innerHTML += spacer;
+                            }
+                        }
+                    });
+
+                    function setCookie(cname, cvalue) {
+                        const d = new Date();
+                        var exdays = 30;
+                        d.setTime(d.getTime() + (exdays*24*60*60*1000));
+                        let expires = "expires="+ d.toUTCString();
+                        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+                    }
+
+                    function getCookie(cname) {
+                        let name = cname + "=";
+                        let decodedCookie = decodeURIComponent(document.cookie);
+                        let ca = decodedCookie.split(';');
+                        for(let i = 0; i <ca.length; i++) {
+                            let c = ca[i];
+                            while (c.charAt(0) == ' ') {
+                            c = c.substring(1);
+                            }
+                            if (c.indexOf(name) == 0) {
+                            return c.substring(name.length, c.length);
+                            }
+                        }
+                        return "";
+                    }
+
+                    function render_rating(rate) {
+                        rate = parseInt(rate);
+                        var rate_html = "";
+                        for (var ctr = 0; ctr < rate; ctr++) {
+                            rate_html += "<i class='fa-solid fa-star'></i>";
+                        }
+
+                        return rate_html;
+                    }
+
+                    function open_modal(item) {
+                        var modal = document.getElementById("qty-modal-" + item);
+                        modal.style.display = "block";
+
+                        window.onclick = function(event) {
+                            if (event.target == modal) {
+                                modal.style.display = "none";
+                            }
+                        }                        
+                    }
+
+                    function calculate(qty, price, id) {
+                        document.getElementById("qty-subtotal-" + id).innerHTML = 'Subtotal:' + price * qty;
+                    }
+
+                    function add_to_cart(item) {
+                        var modal = document.getElementById("qty-modal-" + item);
+                        var qty = getCookie(item) != '' ? parseInt(getCookie(item)) : 0, update = document.getElementById("qty-" + item);
+
+                        if (update.value != "") {
+                            qty += parseInt(update.value);
+                            setCookie(item, qty);
+                            render_cart(item);
+                        }
+                    }
+
+                    function render_cart(id) {
+                        var cart = [], cartItem = {}, cartItemJSON = "", cartJSON = "";
+                        fetch("./data/burgers.json")
+                        .then(function (response) {
+                            return response.json();
+                        })
+                        .then(function (data) {
+                            var items = data.burgers.burger, totalqty = 0;
+                            for (var key in items) {
+                                if (parseInt(getCookie(items[key].id)) > 0) {
+                                    cartItem = {
+                                        id: items[key].id,
+                                        name: items[key].name,
+                                        price: parseInt(items[key].price),
+                                        image: items[key].image,
+                                        qty: parseInt(getCookie(items[key].id))
+                                    }
+                                    cartItemJSON = JSON.stringify(cartItem);
+                                    cart.push(cartItemJSON);
+
+                                    cartJSON = JSON.stringify(cart);
+                                    setCookie('shopping-cart', cartJSON);
+                                    totalqty += parseInt(getCookie(items[key].id))
+                                }
+                            }
+                            setCookie('totalqty', totalqty)
+                            close_modal(id);
+                            render_side_cart();
+                        })
+                    }
+
+                    function render_side_cart() {
+                        var html = "";
+                        var items_count = 0;
+                        var grand_total = 0;
+
+                        var price = 0;
+                        var quantity = 0;
+                        var sub_total = 0;
+
+                        if (getCookie('shopping-cart')) {
+                            var cart = (typeof getCookie('shopping-cart') == 'string') ? JSON.parse(getCookie('shopping-cart')) : getCookie('shopping-cart');
+                            items_count = cart.length;
+
+                            cart.forEach(function(item) {
+                                var cart_item = (typeof item == 'string') ? JSON.parse(item) : item;
+                                price = parseFloat(cart_item.price);
+                                quantity = parseInt(cart_item.qty);
+                                sub_total = price * quantity;
+
+                                html += `<div class='cart-item-container' id="cart-item-`+ cart_item.id +`">
+                                            <div class='item-image'><img width='150' src=` + cart_item.image + ` /></div>
+                                            <div class='item-details'>
+                                                <h3 class='cart-item-name'>` + cart_item.name + `</h3>
+                                                <p class='cart-details'>₱` + price.toFixed(2) + ` x ` + quantity + `</p>
+                                                <a class='red secondary small' href='#' onclick='remove_item("`+ cart_item.id +`")'>Remove</a>
+                                            </div>
+                                            <div class='item-price'>
+                                                <h3 class='no-margin'>₱` + sub_total.toFixed(2) + `</h3>
+                                            </div>
+                                        </div>`;
+
+                                grand_total += sub_total;
+                            });
+                            document.getElementById('cart_items').innerHTML = html;
+                            document.getElementById('cart_count').style.display = 'block';
+                            document.getElementById("checkout_button").style.display = "block";
+                            document.getElementById('cart_count').innerHTML = getCookie('totalqty');
+                            open_cart();
+                        }
+
+                        if (getCookie("totalqty") < 1) {
+                            document.getElementById("checkout_button").style.display = "none";
+                            document.getElementById('cart_count').style.display = 'none';
+                            document.getElementById("cart_items").innerHTML = '<h4 class="text-center">Your cart is empty. Add items first.</h4>';
+                        }
+                        //$('#totalAmount').text("$" + grandTotal.toFixed(2));
+                    }
+
+                    function remove_item(id) {
+                        var container = document.getElementById("cart-item-" + id);
+                        container.remove();
+
+                        var qty = getCookie(id);
+                        setCookie(id, "0");
+                        var totalqty = getCookie("totalqty");
+                        var updated_qty = totalqty - qty;
+                        setCookie("totalqty", updated_qty);
+
+                        var cart = (typeof getCookie('shopping-cart') == 'string') ? JSON.parse(getCookie('shopping-cart')) : getCookie('shopping-cart');
+                        var cart_array = [];
+                        for (var key in cart) {
+                            cart_array.push(JSON.parse(cart[key]));                                
+                        }
+                        var filtered = cart_array.filter(item => item.id != id);
+                        setCookie("shopping-cart", JSON.stringify(filtered));
+                        if (getCookie("totalqty") < 1) {
+                            document.getElementById('cart_count').style.display = 'none';
+                            document.getElementById("cart_items").innerHTML = '<h4 class="text-center">Your cart is empty. Add items first.</h4>';
+                        }
+                    }
+
+                    function close_modal(modal) {
+                        var modal = document.getElementById("qty-modal-" + modal);
+                        modal.style.display = "none";
+                    }
+
+                    function close_cart() {
+                        document.getElementById("side_cart").style.display = "none";
+                    }
+
+                    function open_cart() {
+                        document.getElementById("side_cart").style.display = "block";
+                    }
+                </script>
+            </div>
+            <hr class="hr--clear"/>
+            <hr class="hr--clear"/>
+        </section>
+        <section id="reviews">
+            <div class="reviews-container">
+                <div class="container">
+                    <hr class="hr--clear"/>
+                    <h2 class="text-center brown">Reviews</h2>
+                    <hr class="hr--clear"/>
+                    <div id="reviews-slider"></div>
+
+                    <a class="prev" onclick="navigateSlide(-1)">&#10094;</a>
+                    <a class="next" onclick="navigateSlide(1)">&#10095;</a>
+                </div>
+            </div>
+            <br>
+
+            <script>
+                let slideIndex = 0;
+                fetch("./data/reviews.json")
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    var items = data.reviews;
+                    for (var key in items) {
+                        var html = `<div class="review fade text-center">
+                                        <img src="`+ items[key].image +`" width="250" height="250" class="review-image">
+                                        <br /><br />
+                                        <span class="review-rating brown">` + render_rating(items[key].rating) + `</span>
+                                        <h3 class="review-content">`+ items[key].name +`</h3>
+                                        <p class="no-margin-bottom">`+ items[key].description +`</p>
+                                    </div>`;
+                        document.getElementById('reviews-slider').innerHTML += html;
+                    }
+                    play_slide();
+                });
+                function render_rating(rate) {
+                    rate = parseInt(rate);
+                    var rate_html = "";
+                    for (var ctr = 0; ctr < rate; ctr++) {
+                        rate_html += "<i class='fa-solid fa-star'></i>";
+                    }
+                    return rate_html;
+                }
+                function play_slide(n) {
+                    let i;
+                    let slides = document.getElementsByClassName("review");
+                    if (n >= slides.length) {slideIndex = 0}
+                    if (n < 0) {slideIndex = slides.length - 1}
+                    for (i = 0; i < slides.length; i++) {
+                        slides[i].style.display = "none";
+                    }
+                    slides[slideIndex].style.display = "block";
+                }
+                function navigateSlide(n) {
+                    play_slide(slideIndex += n);
+                }
+            </script>
+            <hr class="hr--clear"/>
+        </section>
+        <footer>
+            <div class="container flex align-center space-between">
+                <div class="copyright padding-top-5"><p class="lx-small light no-margin primary">© 2023. All Rights Reserved.</p></div>
+                <div class="footer-menu">
+                    <ul class="footer-list no-margin">
+                        <li><a href="/" class="light">Home</a></li>
+                        <li><a href="#best-sellers" class="light">Menu</a></li>
+                        <li class="light">Cart</li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
+    </main>
+</body>
+</html>

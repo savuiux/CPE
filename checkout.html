@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>CPE's Special Burger Checkout</title>
+    <link rel="stylesheet" type="text/css" href="style/checkout.css" media="screen" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/1571a8b9bd.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <main>
+        <header id="main-header" class="container">
+            <div class="logo">
+                <img src="assets/images/Logo.png" width="200"/>
+            </div>
+
+            <div class="side-menu">
+                <h3 class="menu"><a href="/index.html" class="dark"><i class="fa-solid fa-arrow-left"></i> Add more items</a></h3>
+            </div>
+        </header>
+        <section id="checkout_body">
+            <hr class="hr--clear" />
+            <div class="container flex space-between checkout-body">
+                <div class="personal-details pr-2">
+                    <h3>Personal Details</h3>
+                    <hr class="hr--small" />
+                    <br />
+                    <input type="text" class="input-details" placeholder="Your first name" id="fname" required>
+                    <input type="text" class="input-details" placeholder="Your last name" id="lname" required>
+                    <br />
+                    <h3>Delivery Details</h3>
+                    <hr class="hr--small" />
+                    <br />
+                    <input type="text" class="input-details" placeholder="Your street address" id="saddress" required>
+                    <input type="text" class="input-details" placeholder="Your barangay" id="baddress" required>
+                    <input type="text" class="input-details" placeholder="Your city" id="caddress" required>
+                    <input type="text" class="input-details" placeholder="Your province" id="paddress" required>
+                    <input type="text" class="input-details" placeholder="Your zip code" id="zaddress" required>
+                    <br />
+                    <h3>Delivery Fee</h3>
+                    <hr class="hr--small" />
+                    <input type="radio" id="html" name="fav_language" value="HTML">
+                    <label for="html">Standard</label><br>
+                    <input type="radio" id="css" name="fav_language" value="CSS">
+                    <label for="css">Express</label><br>
+                    <br />
+                    <h3>Payment</h3>
+                    <hr class="hr--small" />
+                </div>
+                <div class="order-details pr-2">
+                    <h3>Order Details</h3>
+                </div>
+            </div>
+            <hr class="hr--clear" />
+        </section>
+        <footer>
+            <div class="container flex align-center space-between">
+                <div class="copyright padding-top-5"><p class="lx-small light no-margin primary">© 2023. All Rights Reserved.</p></div>
+                <div class="footer-menu">
+                    <ul class="footer-list no-margin">
+                        <li><a href="/" class="light">Home</a></li>
+                        <li><a href="/index.html/#best-sellers" class="light">Menu</a></li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
+    </main>
+</body>
