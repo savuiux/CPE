@@ -37,7 +37,9 @@
                     <hr class="hr--clear" />
                     <div id="cart_items"></div>
                     <div id="cart_subtotal"></div>
-                    
+                    <div class="grand-total">
+                        <h3>Total: ₱<span id="grand_total"></span></h3>
+                    </div>
                     <div id="cart_buttons">
                         <button class="tertiary-button pointer" onclick="close_cart();">Continue Shopping</button>
                         <button class="secondary-button pointer" id="checkout_button" style="display: none;"><a href="/checkout.html" class="dark">Checkout</a></button>
@@ -203,7 +205,7 @@
                                 sub_total = price * quantity;
 
                                 html += `<div class='cart-item-container' id="cart-item-`+ cart_item.id +`">
-                                            <div class='item-image'><img width='150' src=` + cart_item.image + ` /></div>
+                                            <div class='item-image'><img width='75' src=` + cart_item.image + ` /></div>
                                             <div class='item-details'>
                                                 <h3 class='cart-item-name'>` + cart_item.name + `</h3>
                                                 <p class='cart-details'>₱` + price.toFixed(2) + ` x ` + quantity + `</p>
@@ -228,7 +230,7 @@
                             document.getElementById('cart_count').style.display = 'none';
                             document.getElementById("cart_items").innerHTML = '<h4 class="text-center">Your cart is empty. Add items first.</h4>';
                         }
-                        //$('#totalAmount').text("$" + grandTotal.toFixed(2));
+                        document.getElementById("grand_total").innerHTML = parseFloat(grand_total).toFixed(2);
                     }
 
                     function remove_item(id) {
