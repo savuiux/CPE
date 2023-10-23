@@ -7,7 +7,6 @@
   - Home
   - Checkout
   - Thank you
-  - Account Page
 # Features
   - Side cart
   - Saving of information
