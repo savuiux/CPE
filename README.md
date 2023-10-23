@@ -11,7 +11,6 @@
   - Side cart
   - Saving of information
   - Remove item
-  - Clear cart
   - Validation
   - Login
   - Logout
