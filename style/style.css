@@ -550,24 +550,24 @@ footer {
     margin-top: 3rem;
 }
 .secondary-button {
-  background: var(--yorange);
-  border-radius: 30px;
-  padding: 15px 40px;
-  border: none;
-  font-family: var(--primary-font);
-  font-weight: 700;
-  width: 100%;
-  margin-bottom: 10px;
+    background: var(--yorange);
+    border-radius: 30px;
+    padding: 15px 40px;
+    border: none;
+    font-family: var(--primary-font);
+    font-weight: 700;
+    width: 100%;
+    margin-bottom: 10px;
 }
 .tertiary-button {
-  background: transparent;
-  border-radius: 30px;
-  padding: 15px 40px;
-  border: 2px solid var(--dark);
-  font-family: var(--primary-font);
-  font-weight: 700;
-  width: 100%;
-  margin-bottom: 10px;
+    background: transparent;
+    border-radius: 30px;
+    padding: 15px 40px;
+    border: 2px solid var(--dark);
+    font-family: var(--primary-font);
+    font-weight: 700;
+    width: 100%;
+    margin-bottom: 10px;
 }
 .hr--large {
     border: 0;
@@ -698,7 +698,7 @@ footer {
 }
 .modal-content {
   background-color: var(--light);
-  margin: 15% auto;
+  margin: 5% auto;
   padding: 20px 20px 4rem;
   border: 1px solid #888;
   width: 30%;
