@@ -420,6 +420,11 @@ footer {
   top: -141px;
   margin-bottom: -149px;
 }
+#thankyou {
+  padding: .5rem 2rem;
+  background-color: var(--light);
+  border-radius: 30px;
+}
 .overlay {
     position: relative;
 }
@@ -494,6 +499,9 @@ footer {
 .margin-right-5 {
     margin-right: 5px;
 }
+.margin-bottom-10 {
+  margin-bottom: 10px;
+}
 .no-margin-bottom {
   margin-bottom: 0;
 }
@@ -502,6 +510,9 @@ footer {
 }
 .padding-top-5 {
   padding-top: 5px;
+}
+.width-40p {
+  width: 40% !important;
 }
 .menu,
 .cart {
@@ -523,6 +534,9 @@ footer {
     left: 10px;
     font-size: 80%;
     font-weight: 700;
+}
+.menu {
+  margin-right: 1rem;
 }
 .cart {
     margin-right: 1rem;
@@ -742,6 +756,18 @@ footer {
 .checkout-disclaimer {
   display: block;
   width: 100%;
+}
+.details-border {
+  margin: 0;
+  margin-top: -5px;
+  margin-bottom: 15px;
+  margin-right: auto;
+  width: 5%;
+  border: none;
+  border-bottom: 0.3rem solid var(--dark);
+}
+.flex-50 {
+  flex-basis: 50%;
 }
 .fade {
   animation-name: fade;

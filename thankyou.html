@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>CPE's Special Burger Checkout</title>
+    <link rel="stylesheet" type="text/css" href="style/style.css" media="screen" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/1571a8b9bd.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header id="main-header" class="container">
+        <div class="logo">
+            <img src="assets/images/Logo.png" width="200"/>
+        </div>
+
+        <div class="side-menu">
+            <h3 class="menu"><a href="/index.html" class="dark"><i class="fa-solid fa-arrow-left"></i> Add more items</a></h3>
+        </div>
+    </header>
+    <main>
+        <hr class="hr--clear" />
+        <section id="thankyou" class="container">
+            <h2 class="no-margin-bottom">Order Confirmed!</h2>
+            <div class="flex space-between">
+                <div class="personal-details flex-50">
+                    <h3 class="no-margin-bottom">Hi, <span id="fname"></span>!</h3>
+                    <p>We got your order. We'll notify you as soon as is gets shipped out.</p>
+                    
+                    <div class="shipping-details">
+                        <h3>Where is it going?</h3>
+                        <p class="no-margin-bottom"><span id="address"></span></p>
+                    </div>
+                    <br />
+                    <button class="tertiary-button pointer width-40p" onclick="reset()">Shop again</button>
+                </div>
+                <div class="order-details flex-50">
+                    <h3 id="order_number"></h3>
+                    <hr class="details-border"/>
+                    <div id="cart_items" class="width-40p"></div>
+                    <div class="shipping">
+                        <h3><span class="shipping-title">Shipping: </span><span id="shipping_cost"></span></h3>
+                    </div>
+                    <div class="grand-total">
+                        <h3>Total: <span id="grand_total"></span></h3>
+                    </div>
+                </div>
+            </div>
+  
+            <script>
+                var order_number = Math.floor(10000000 + Math.random() * 90000000);
+                function setCookie(cname, cvalue) {
+                    const d = new Date();
+                    var exdays = 30;
+                    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+                    let expires = "expires="+ d.toUTCString();
+                    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+                }
+
+                function getCookie(cname) {
+                    let name = cname + "=";
+                    let decodedCookie = decodeURIComponent(document.cookie);
+                    let ca = decodedCookie.split(';');
+                    for(let i = 0; i <ca.length; i++) {
+                        let c = ca[i];
+                        while (c.charAt(0) == ' ') {
+                        c = c.substring(1);
+                        }
+                        if (c.indexOf(name) == 0) {
+                        return c.substring(name.length, c.length);
+                        }
+                    }
+                    return "";
+                }
+
+                function remove_cookies() {
+                    document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
+                }
+
+                function reset() {
+                    location.href = "/index.html#best-sellers";
+                    remove_cookies();
+                }
+                document.getElementById("fname").innerHTML = getCookie("fname");
+                document.getElementById("shipping_cost").innerHTML = "₱" + getCookie("shipping_cost");
+                document.getElementById("order_number").innerHTML = "Order #" + parseInt(order_number.toFixed(8));
+                document.getElementById("address").innerHTML = getCookie("saddress") + "<br />" + getCookie("baddress") + "<br />" + getCookie("caddress") + "<br />" +getCookie("paddress") + "<br />" + getCookie("zaddress");
+
+                var cart = (typeof getCookie('shopping-cart') == 'string') ? JSON.parse(getCookie('shopping-cart')) : getCookie('shopping-cart');
+                var html = "";
+                var grand_total = 0;
+                var price = 0;
+                var quantity = 0;
+                var sub_total = 0;
+                cart.forEach(function(item) {
+                    var cart_item = (typeof item == 'string') ? JSON.parse(item) : item;
+                    price = parseFloat(cart_item.price);
+                    quantity = parseInt(cart_item.qty);
+                    sub_total = price * quantity;
+
+                    html += `<div class='cart-item-container' id="cart-item-`+ cart_item.id +`">
+                                <div class='item-image'><img width='75' src=` + cart_item.image + ` /></div>
+                                <div class='item-details'>
+                                    <h3 class='cart-item-name'>` + cart_item.name + `</h3>
+                                    <p class='cart-details'>₱` + price.toFixed(2) + ` x ` + quantity + `</p>
+                                </div>
+                                <div class='item-price'>
+                                    <h3 class='no-margin'>₱` + sub_total.toFixed(2) + `</h3>
+                                </div>
+                            </div>`;
+
+                    grand_total += sub_total;
+                });
+                document.getElementById('cart_items').innerHTML = html;
+                document.getElementById("grand_total").innerHTML = "₱" + parseFloat(grand_total).toFixed(2);
+            </script>
+            <br>
+        </section>
+    </main>
+    <hr class="hr--clear" />
+    <footer>
+        <div class="container flex align-center space-between">
+            <div class="copyright padding-top-5"><p class="lx-small light no-margin primary">© 2023. All Rights Reserved.</p></div>
+            <div class="footer-menu">
+                <ul class="footer-list no-margin">
+                    <li><a href="/" class="light">Home</a></li>
+                    <li><a href="/index.html/#best-sellers" class="light">Menu</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+</body>

@@ -10,48 +10,70 @@
     <script src="https://kit.fontawesome.com/1571a8b9bd.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <main>
-        <header id="main-header" class="container">
-            <div class="logo">
-                <img src="assets/images/Logo.png" width="200"/>
-            </div>
+    <header id="main-header" class="container">
+        <div class="logo">
+            <img src="assets/images/Logo.png" width="200"/>
+        </div>
 
-            <div class="side-menu">
-                <h3 class="menu"><a href="/index.html" class="dark"><i class="fa-solid fa-arrow-left"></i> Add more items</a></h3>
-            </div>
-        </header>
+        <div class="side-menu">
+            <h3 class="menu"><a href="/index.html" class="dark"><i class="fa-solid fa-arrow-left"></i> Add more items</a></h3>
+        </div>
+    </header>
+    <main>
         <section id="checkout_body">
             <hr class="hr--clear" />
             <div class="container flex space-between checkout-body">
                 <div class="personal-details pr-2">
+                    <h4 class="margin-bottom-25 login-notif pointer" onclick="open_login()">Login to your account or register.</h4>
+                    <div id="account-modal">
+                        <div class="modal-content padding-bottom-1rem">
+                            <span class="close" onclick="close_modal()">&times;</span>
+                            <h2>Login</h2>
+                            <h5>Login to your account.</h5>
+                            <small class="red secondary margin-bottom-25" id="login_error" style="display: none;"></small>
+                            <input type="text" class="input-details width-90p" id="username" placeholder="Username"/>
+                            <input type="password" class="input-details width-90p no-margin-bottom" id="password" placeholder="Password" />
+                            <small class="primary">New user? <a href="#" class="dark bold">Register here.</a></small>
+                            <br /><br />
+                            <button class="secondary-button pointer no-margin-bottom full-width" onclick="login()">Login</button>
+                        </div>
+                    </div>
                     <h3>Personal Details</h3>
                     <hr class="details-border" />
                     <br />
-                    <input type="text" class="input-details" placeholder="Your first name" id="fname" required>
-                    <input type="text" class="input-details" placeholder="Your last name" id="lname" required>
+                    <input type="text" class="input-details order-information" placeholder="Your first name" id="fname" required onkeyup="validate(this)">
+                    <small class="error"></small>
+                    <input type="text" class="input-details order-information" placeholder="Your last name" id="lname" required onkeyup="validate(this)">
+                    <small class="error"></small>
                     <br />
                     <h3>Delivery Details</h3>
                     <hr class="details-border" />
                     <br />
-                    <input type="text" class="input-details" placeholder="Your street address" id="saddress" required>
-                    <input type="text" class="input-details" placeholder="Your barangay" id="baddress" required>
-                    <input type="text" class="input-details" placeholder="Your city" id="caddress" required>
-                    <input type="text" class="input-details" placeholder="Your province" id="paddress" required>
-                    <input type="number" class="input-details" placeholder="Your zip code" id="zaddress" required>
+                    <input type="text" class="input-details order-information" placeholder="Your street address" id="saddress" required onkeyup="validate(this)">
+                    <small class="error"></small>
+                    <input type="text" class="input-details order-information" placeholder="Your barangay" id="baddress" required onkeyup="validate(this)">
+                    <small class="error"></small>
+                    <input type="text" class="input-details order-information" placeholder="Your city" id="caddress" required onkeyup="validate(this)">
+                    <small class="error"></small>
+                    <input type="text" class="input-details order-information" placeholder="Your province" id="paddress" required onkeyup="validate(this)">
+                    <small class="error"></small>
+                    <input type="number" class="input-details order-information" placeholder="Your zip code" id="zaddress" required onkeyup="validate(this)">
+                    <small class="error"></small>
                     <br />
                     <h3>Delivery Fee</h3>
                     <hr class="details-border" />
                     <br />
                     <div class="delivery-container flex align-center">
                         <div class="delivery-option">
-                            <input type="radio" id="standard" name="delivery_type" value="50" onclick="recalculate_total(this.value)">
+                            <input class="delivery-information" type="radio" id="standard" name="delivery_type" value="50" onclick="recalculate_total(this.value)">
                             <label for="standard" class="secondary"><i class="fa-solid fa-truck"></i> Standard - ₱50.00</label><br>
                         </div>
                         <div class="delivery-option">
-                            <input type="radio" id="express" name="delivery_type" value="180" onclick="recalculate_total(this.value)">
+                            <input class="delivery-information" type="radio" id="express" name="delivery_type" value="180" onclick="recalculate_total(this.value)">
                             <label for="express" class="secondary"><i class="fa-solid fa-truck-fast"></i> Express - ₱180.00</label><br>
                         </div>
                     </div>
+                    <small class="radio-error"></small>
                     <br />
                     <br />
                     <h3>Payment</h3>
@@ -93,8 +115,11 @@
                 <div class="order-details pr-2">
                     <h3>Order Details</h3>
                     <div id="cart_items"></div>
+                    <div class="shipping">
+                        <h3 class="flex space-between"><span class="shipping-title">Shipping:</span><span id="shipping_cost"></span></h3>
+                    </div>
                     <div class="grand-total">
-                        <h3>Total: ₱<span id="grand_total"></span></h3>
+                        <h3 class="flex space-between"><span class="total-title">Total:</span><span id="grand_total"></span></h3>
                     </div>
                     <script>
                         var html = "";
@@ -125,10 +150,22 @@
                                 grand_total += sub_total;
                             });
                             document.getElementById('cart_items').innerHTML = html;
-                            document.getElementById("grand_total").innerHTML = parseFloat(grand_total).toFixed(2);
+                            document.getElementById("grand_total").innerHTML = "₱" + parseFloat(grand_total).toFixed(2);
                             setCookie("grand_total", parseFloat(grand_total).toFixed(2));
                         }
 
+                        function login() {
+                            var user = document.getElementById("username").value;
+                            var pass = document.getElementById("password").value;
+
+                            if (user == "admin" && pass == "admin") {
+                                close_modal();
+                            } else {
+                                document.getElementById("login_error").innerHTML = "Wrong Username/Password. Please try again.";
+                                document.getElementById("login_error").style.display = "block";
+                            }
+                        }
+                        
                         function setCookie(cname, cvalue) {
                             const d = new Date();
                             var exdays = 30;
@@ -157,11 +194,19 @@
                             var grand_total = getCookie("grand_total");
 
                             var new_total = parseFloat(grand_total) + parseInt(shipping_fee);
-                            document.getElementById("grand_total").innerHTML = parseFloat(new_total).toFixed(2);
+                            document.getElementById("grand_total").innerHTML = "₱" + parseFloat(new_total).toFixed(2);
+                            document.getElementById("shipping_cost").innerHTML = "₱" + parseFloat(shipping_fee).toFixed(2);
+                            document.querySelector('.delivery-container').classList.remove("input-error");
+                            document.querySelector('.delivery-container').nextElementSibling.style.display = "none";
+                            document.querySelector('.delivery-container').nextElementSibling.innerHTML = "";
+                            document.querySelector('.shipping').style.display = "block";
+
+                            setCookie("shipping_cost", parseFloat(shipping_fee).toFixed(2));
                         }
 
                         function close_modal() {
                             document.getElementById("payment-modal").style.display = "none";
+                            document.getElementById("account-modal").style.display = "none";
                         }
                         
                         function select_payment(type) {
@@ -197,25 +242,79 @@
                                     }
                                 }
                                 document.getElementById("payment_fields").innerHTML = html;
-                            } else {
-
                             }
+                            setCookie("payment_type", type);
+                        }
+
+                        function place_order() {
+                            if (validate("all")) {
+                                var fields = document.getElementsByClassName("order-information");
+                                Array.from(fields).forEach((field) => {
+                                    setCookie(field.getAttribute("id"), field.value);
+                                });
+                                location.href = "/thankyou.html";
+                            }
+                        }
+
+                        function validate(fields) {
+                            var valid = true;
+                            if (fields == "all") {
+                                var elements = document.getElementsByClassName("order-information");
+                                Array.from(elements).forEach((element) => {
+                                   if (element.value == "") {
+                                        element.classList.add("input-error");
+                                        element.nextElementSibling.style.display = "block";
+                                        element.nextElementSibling.innerHTML = "Required field.";
+                                        valid = false;
+                                   } else {
+                                        element.classList.remove("input-error");
+                                        element.nextElementSibling.style.display = "none";
+                                        element.nextElementSibling.innerHTML = " ";
+                                   }
+                                });
+
+                                if (document.querySelector('input[name="delivery_type"]:checked') == null) {
+                                    document.querySelector('.delivery-container').classList.add("input-error");
+                                    document.querySelector('.delivery-container').nextElementSibling.style.display = "block";
+                                    document.querySelector('.delivery-container').nextElementSibling.innerHTML = "Required field.";
+                                    valid = false;
+                                } else {
+                                    document.querySelector('.delivery-container').classList.remove("input-error");
+                                    document.querySelector('.delivery-container').nextElementSibling.style.display = "none";
+                                    document.querySelector('.delivery-container').nextElementSibling.innerHTML = "";
+                                }
+                                return valid;
+                            } else {
+                                if (fields.value == "") {
+                                    fields.classList.add("input-error");
+                                    fields.nextElementSibling.style.display = "block";
+                                    fields.nextElementSibling.innerHTML = "Required field.";
+                                } else {
+                                    fields.classList.remove("input-error");
+                                    fields.nextElementSibling.style.display = "none";
+                                    fields.nextElementSibling.innerHTML = "";
+                                }
+                            }                            
+                        }
+                    
+                        function open_login() {
+                            document.getElementById("account-modal").style.display = "block";
                         }
                     </script>
                 </div>
             </div>
             <hr class="hr--clear" />
         </section>
-        <footer>
-            <div class="container flex align-center space-between">
-                <div class="copyright padding-top-5"><p class="lx-small light no-margin primary">© 2023. All Rights Reserved.</p></div>
-                <div class="footer-menu">
-                    <ul class="footer-list no-margin">
-                        <li><a href="/" class="light">Home</a></li>
-                        <li><a href="/index.html/#best-sellers" class="light">Menu</a></li>
-                    </ul>
-                </div>
-            </div>
-        </footer>
     </main>
+    <footer>
+        <div class="container flex align-center space-between">
+            <div class="copyright padding-top-5"><p class="lx-small light no-margin primary">© 2023. All Rights Reserved.</p></div>
+            <div class="footer-menu">
+                <ul class="footer-list no-margin">
+                    <li><a href="/" class="light">Home</a></li>
+                    <li><a href="/index.html/#best-sellers" class="light">Menu</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
 </body>

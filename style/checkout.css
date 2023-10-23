@@ -423,6 +423,9 @@ footer {
 .no-margin {
     margin: 0;
 }
+.margin-bottom-25 {
+  margin-bottom: 25px;
+}
 .no-margin-bottom {
   margin-bottom: 0;
 }
@@ -465,10 +468,13 @@ footer {
     display: block;
     border: 1px solid rgba(var(--darkrgb), .2);
     border-radius: 30px;
-    padding: 0.5rem 2rem;
+    padding: 0.5rem 1rem;
     margin-bottom: 15px;
     width: 95%;
     font-family: var(--body-font);
+}
+.shipping {
+  display: none;
 }
 .delivery-option {
     display: inline-flex;
@@ -479,6 +485,7 @@ footer {
 }
 .payments-container {
     gap: .5rem;
+    width: 70%;
 }
 .payment-option {
     border: 1px solid;
@@ -537,7 +544,11 @@ footer {
     font-weight: 700;
     margin-bottom: 10px;
 }
-#payment-modal {
+.bold {
+  font-weight: 700;
+}
+#payment-modal,
+#account-modal {
   display: none;
   position: fixed;
   z-index: 500;
@@ -570,6 +581,12 @@ footer {
 .full-width {
   width: 100%;
 }
+.width-90p {
+  width: 90%;
+}
+.padding-bottom-1rem {
+  padding-bottom: 1rem;
+}
 #payment-modal .tertiary-button,
 #payment-modal .secondary-button {
   padding: 12px 0;
@@ -585,4 +602,26 @@ footer {
   color: black;
   text-decoration: none;
   cursor: pointer;
+}
+.login-notif {
+  border: 2px solid var(--yorange);
+  background: var(--beige);
+  padding: 1rem;
+  border-radius: 5px;
+  margin-top: 0;
+}
+.input-error {
+  border: 1px solid var(--red);
+  border-radius: 30px;
+  padding: 15px;
+}
+.error {
+  margin: -10px 0 15px 15px;
+  font-family: var(--body-font);
+  color: var(--red);
+}
+.radio-error {
+  margin: 15px 0 15px 15px;
+  font-family: var(--body-font);
+  color: var(--red);
 }
