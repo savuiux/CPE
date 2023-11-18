@@ -8,7 +8,7 @@
  * 2. Prevent adjustments of font size after orientation changes in iOS.
  */
 
-html {
+ html {
   line-height: 1.15; /* 1 */
   -webkit-text-size-adjust: 100%; /* 2 */
   scroll-behavior: smooth;
@@ -421,7 +421,7 @@ footer {
   margin-bottom: -149px;
 }
 #thankyou {
-  padding: .5rem 2rem;
+  padding: 5rem;
   background-color: var(--light);
   border-radius: 30px;
 }
@@ -455,6 +455,9 @@ footer {
 }
 .space-between {
   justify-content: space-between;
+}
+.space-around {
+  justify-content: space-around;
 }
 .relative {
     position: relative;
@@ -513,6 +516,9 @@ footer {
 }
 .width-40p {
   width: 40% !important;
+}
+.width-60p {
+  width: 60% !important;
 }
 .menu,
 .cart {
@@ -726,6 +732,15 @@ footer {
   border: 2px solid var(--dark);
   border-radius: 30px;
 }
+.qty-input-additional {
+  font-family: var(--body-font);
+  font-size: 14px;
+  padding: 10px 15px;
+  width: 70%;
+  text-align: center;
+  border: 2px solid var(--dark);
+  border-radius: 30px;
+}
 .close-cart {
   cursor: pointer;
   font-size: 3rem;
@@ -768,6 +783,9 @@ footer {
 }
 .flex-50 {
   flex-basis: 50%;
+}
+.additional-item {
+  margin: 0 15px;
 }
 .fade {
   animation-name: fade;

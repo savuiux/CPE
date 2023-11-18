@@ -10,18 +10,18 @@
     <script src="https://kit.fontawesome.com/1571a8b9bd.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <header id="main-header" class="container">
-        <div class="logo">
-            <img src="assets/images/Logo.png" width="200"/>
-        </div>
-
-        <div class="side-menu">
-            <h3 class="cart pointer" id="open_cart" onclick="open_cart()"><i class="fa-solid fa-cart-shopping"></i><span id="cart_count"></span></h3>
-            <h3 class="menu"><a href="#best-sellers" class="light"><i class="fa-solid fa-bars margin-right-5"></i>Menu</a></h3>
-            <h3 class="menu"><a href="#" class="light"><i class="fa-solid fa-user margin-right-5"></i><span id="user"></span></a></h3>
-        </div>
-    </header>
     <main>
+        <header id="main-header" class="container">
+            <div class="logo">
+                <img src="assets/images/Logo.png" width="200"/>
+            </div>
+    
+            <div class="side-menu">
+                <h3 class="cart pointer" id="open_cart" onclick="open_cart()"><i class="fa-solid fa-cart-shopping"></i><span id="cart_count"></span></h3>
+                <h3 class="menu"><a href="#best-sellers" class="light"><i class="fa-solid fa-bars margin-right-5"></i>Menu</a></h3>
+                <h3 class="menu"><a href="#" class="light"><i class="fa-solid fa-user margin-right-5"></i><span id="user"></span></a></h3>
+            </div>
+        </header>
         <section id="hero">
             <div class="overlay"></div>
             <div class="hero-content">
@@ -79,9 +79,42 @@
                                                     <span class="close" onclick="close_modal('` + items[key].id +`')">&times;</span>
                                                     <h1>Confirm Add</h1>
                                                     <h3>Add `+ items[key].name  +` to cart</h3>
+                                                    <p>Price: ₱<span class="burger-price">`+ items[key].price +`</span></p>
                                                     <input id="qty-`+ items[key].id +`" type="number" onkeyup="calculate(this.value,'`+ items[key].price +`','`+ items[key].id +`')" placeholder="Input quantity to add to cart" class="qty-input" min="1" max="20" required />
+                                                    
+                                                    <hr class="hr--clear" />
+                                                    <h3>Additional:</h3>
                                                     <br />
-                                                    <h3 id="qty-subtotal-`+ items[key].id +`"></h3>
+                                                    <div class="flex additional space-around">
+                                                        <div class="patties additional-item" id="additional-patty-`+ items[key].id +`">
+                                                            <img src="/assets/images/additional_patty.png" width="145" height="110" />
+                                                            <h5 class="no-margin-bottom">Regular Patty</h5>
+                                                            <p>₱199.99</p>
+                                                            <input data-value="199.99" data-name="Beef Patty" id="qty-additional-patty-`+ items[key].id +`" type="number" oninput="calculate_additional('`+ items[key].id +`')" placeholder="Quantity" class="qty-input-additional" min="1" max="20" />
+                                                        </div>
+                                                        <div class="lettuce additional-item" id="additional-lettuce-`+ items[key].id +`">
+                                                            <img src="/assets/images/additional_lettuce.png" width="145" height="110" />
+                                                            <h5 class="no-margin-bottom">Lettuce</h5>
+                                                            <p>₱80.00</p>
+                                                            <input data-value="80.00" data-name="Lettuce" id="qty-additional-lettuce-`+ items[key].id +`" type="number" oninput="calculate_additional('`+ items[key].id +`')" placeholder="Quantity" class="qty-input-additional" min="1" max="20" />
+                                                        </div>
+                                                        <div class="tomato additional-item" id="additional-tomato-`+ items[key].id +`">
+                                                            <img src="/assets/images/additional_tomato.png" width="145" height="110" />
+                                                            <h5 class="no-margin-bottom">Tomato</h5>
+                                                            <p>₱39.99</p>
+                                                            <input data-value="39.99" data-name="Tomato" id="qty-additional-tomato-`+ items[key].id +`" type="number" oninput="calculate_additional('`+ items[key].id +`')" placeholder="Quantity" class="qty-input-additional" min="1" max="20" />
+                                                        </div> 
+                                                        <div class="bun additional-item" id="additional-bun-`+ items[key].id +`">
+                                                            <img src="/assets/images/additional_bun.png" width="145" height="110" />
+                                                            <h5 class="no-margin-bottom">Bun</h5>
+                                                            <p>₱30.00</p>
+                                                            <input data-value="30.00" data-name="Bun" id="qty-additional-bun-`+ items[key].id +`" type="number" oninput="calculate_additional('`+ items[key].id +`')" placeholder="Quantity" class="qty-input-additional" min="1" max="20" />
+                                                        </div>
+                                                    </div>
+
+                                                    <hr class="hr--clear" />
+                                                    
+                                                    <h3>Subtotal: <span id="qty-subtotal-`+ items[key].id +`"></span></h3>
                                                     <br />
                                                     <button class="cancel pointer" onclick="close_modal('` + items[key].id +`')">Cancel</button>
                                                     <button class="add-to-cart pointer" onclick="add_to_cart('`+ items[key].id +`')">Add to Cart</button>
@@ -141,21 +174,94 @@
                     }
 
                     function calculate(qty, price, id) {
-                        document.getElementById("qty-subtotal-" + id).innerHTML = 'Subtotal:' + price * qty;
+                        let calculated_price = calculate_additional(id);
+                        let initial_price = price * qty;
+                        //document.getElementById("qty-subtotal-" + id).innerHTML = calculated_price + initial_price;
+                    }
+
+                    function calculate_additional(id) {
+                        let qt_parent = document.getElementById("qty-modal-" + id);
+                        let qties = qt_parent.querySelectorAll(".qty-input-additional");
+                        let initial = parseFloat(qt_parent.querySelector(".burger-price").innerHTML);
+                        let initial_qty = parseInt(qt_parent.querySelector("#qty-" + id).value);
+                        var ttl = 0;
+                        var final = 0;
+
+                        initial = initial * initial_qty;
+
+                        qties.forEach(qty => {
+                            if (qty.value != "" && qty.value != 0) {
+                                let price = parseFloat(qty.getAttribute("data-value"));
+                                ttl += price * qty.value;
+                            }
+                        });
+                        if (isNaN(initial)) {
+                            final = ttl;
+                        } else {
+                            final = ttl + initial;
+                        }
+                        document.getElementById("qty-subtotal-" + id).innerHTML = parseFloat(final).toFixed(2);
+                        return final;
                     }
 
                     function add_to_cart(item) {
                         var modal = document.getElementById("qty-modal-" + item);
-                        var qty = getCookie(item) != '' ? parseInt(getCookie(item)) : 0, update = document.getElementById("qty-" + item);
+                        var quantity = getCookie(item) != '' ? parseInt(getCookie(item)) : 0, update = document.getElementById("qty-" + item);
+
+                        let qt_parent = document.getElementById("qty-modal-" + item);
+                        let qties = qt_parent.querySelectorAll(".qty-input-additional");
+
+                        var initial = parseFloat(qt_parent.querySelector(".burger-price").innerHTML);
+                        var initial_qty = parseInt(qt_parent.querySelector("#qty-" + item).value);
+
+                        var ttl = 0;
+                        var final = 0;
+                        var qty = 0;
+
+                        initial = initial * initial_qty;
+
+                        let cart_item = {};
+
 
                         if (update.value != "") {
                             qty += parseInt(update.value);
                             setCookie(item, qty);
-                            render_cart(item);
+
+                            cart_item[item] = {
+                                quantity: qty
+                            }
+
+                            qties.forEach(qt => {
+                                if (qt.value != "" && qt.value != 0) {
+                                    let cookie_price = parseFloat(qt.getAttribute("data-value"));
+                                    let cookie_name = qt.getAttribute("id");
+                                    let cookie_qt = parseInt(qt.value);
+
+                                    setCookie(cookie_name, cookie_qt); 
+                                    
+                                    ttl += parseFloat(qt.getAttribute("data-value")) * cookie_qt;
+
+                                    cart_item[item][cookie_name] = {
+                                        additional_name : cookie_name,
+                                        additional_qty : cookie_qt,
+                                        additional_price : parseFloat(ttl).toFixed(2),
+                                        proper_name: qt.getAttribute("data-name")
+                                    }
+                                }
+                            });
+
+                            if (isNaN(initial)) {
+                                final = ttl;
+                            } else {
+                                final = ttl + initial;
+                            }
+                            cart_item[item].final_pricing = final;
+                            render_cart(item, cart_item);
                         }
+                        
                     }
 
-                    function render_cart(id) {
+                    function render_cart(id, cart_item) {
                         var cart = [], cartItem = {}, cartItemJSON = "", cartJSON = "";
                         fetch("./data/burgers.json")
                         .then(function (response) {
@@ -163,23 +269,40 @@
                         })
                         .then(function (data) {
                             var items = data.burgers.burger, totalqty = 0;
-                            for (var key in items) {
-                                if (parseInt(getCookie(items[key].id)) > 0) {
-                                    cartItem = {
-                                        id: items[key].id,
-                                        name: items[key].name,
-                                        price: parseInt(items[key].price),
-                                        image: items[key].image,
-                                        qty: parseInt(getCookie(items[key].id))
+                            cartItem = getCookie('shopping-cart') != '' && getCookie('shopping-cart') != "[]" ? JSON.parse(JSON.parse(getCookie('shopping-cart'))) : {} ;
+                            for (var ctr in items) {
+                                if (parseInt(getCookie(items[ctr].id)) > 0 && items[ctr].id == id) {
+                                    cartItem[items[ctr].id] = {
+                                        id: items[ctr].id,
+                                        name: items[ctr].name,
+                                        price: parseFloat(items[ctr].price).toFixed(2),
+                                        image: items[ctr].image
                                     }
+                                    
+                                    cartItem[items[ctr].id].quantity = cart_item[items[ctr].id].quantity;
+                                    cartItem[items[ctr].id].final_price = cart_item[items[ctr].id].final_pricing;
+                                    var itemlist = cart_item[items[ctr].id];
+
+                                    for (var key in itemlist) {
+                                        if (itemlist[key].additional_name != undefined) {
+                                            cartItem[items[ctr].id][itemlist[key].additional_name] = {
+                                                additional_name : itemlist[key].additional_name,
+                                                additional_qty : itemlist[key].additional_qty,
+                                                additional_price : itemlist[key].additional_price,
+                                                proper_name: itemlist[key].proper_name
+                                            }
+                                        }
+                                    }
+
                                     cartItemJSON = JSON.stringify(cartItem);
                                     cart.push(cartItemJSON);
 
-                                    cartJSON = JSON.stringify(cart);
-                                    setCookie('shopping-cart', cartJSON);
-                                    totalqty += parseInt(getCookie(items[key].id))
                                 }
+                                var ckie_qty = getCookie(items[ctr].id);
+                                totalqty += ckie_qty == "" ? 0 : parseInt(ckie_qty);
                             }
+                            cartJSON = JSON.stringify(cart);
+                            setCookie('shopping-cart', cartJSON);
                             setCookie('totalqty', totalqty)
                             close_modal(id);
                             render_side_cart();
@@ -201,28 +324,31 @@
 
                             cart.forEach(function(item) {
                                 var cart_item = (typeof item == 'string') ? JSON.parse(item) : item;
-                                price = parseFloat(cart_item.price);
-                                quantity = parseInt(cart_item.qty);
-                                sub_total = price * quantity;
+                                for (var key in cart_item) {
+                                    price = parseFloat(cart_item[key].price);
+                                    quantity = parseInt(cart_item[key].quantity);
+                                    sub_total = cart_item[key].final_price;
 
-                                html += `<div class='cart-item-container' id="cart-item-`+ cart_item.id +`">
-                                            <div class='item-image'><img width='75' src=` + cart_item.image + ` /></div>
-                                            <div class='item-details'>
-                                                <h3 class='cart-item-name'>` + cart_item.name + `</h3>
-                                                <p class='cart-details'>₱` + price.toFixed(2) + ` x ` + quantity + `</p>
-                                                <a class='red secondary small' href='#' onclick='remove_item("`+ cart_item.id +`")'>Remove</a>
-                                            </div>
-                                            <div class='item-price'>
-                                                <h3 class='no-margin'>₱` + sub_total.toFixed(2) + `</h3>
-                                            </div>
-                                        </div>`;
+                                    html += `<div class='cart-item-container' id="cart-item-`+ cart_item[key].id +`">
+                                                <div class='item-image'><img width='75' src=` + cart_item[key].image + ` /></div>
+                                                <div class='item-details'>
+                                                    <h3 class='cart-item-name'>` + cart_item[key].name + `</h3>
+                                                    <p class='cart-details'>₱` + price.toFixed(2) + ` x ` + quantity + `</p>`+ render_additional(cart_item[key]) +`                                                    
+                                                </div>
+                                                <div class='item-price'>
+                                                    <h3 class='no-margin'>₱` + sub_total.toFixed(2) + `</h3>
+                                                    <a class='red secondary small' href='#' onclick='remove_item("`+ cart_item[key].id +`")'>Remove</a>
+                                                </div>
+                                            </div>`;
 
-                                grand_total += sub_total;
+                                    grand_total += sub_total;
+                                }
                             });
                             document.getElementById('cart_items').innerHTML = html;
                             document.getElementById('cart_count').style.display = 'block';
                             document.getElementById("checkout_button").style.display = "block";
                             document.getElementById('cart_count').innerHTML = getCookie('totalqty');
+                            document.querySelector(".grand-total").style.display = "block";
                             open_cart();
                         }
 
@@ -230,8 +356,26 @@
                             document.getElementById("checkout_button").style.display = "none";
                             document.getElementById('cart_count').style.display = 'none';
                             document.getElementById("cart_items").innerHTML = '<h4 class="text-center">Your cart is empty. Add items first.</h4>';
+                            document.querySelector(".grand-total").style.display = "none";
                         }
                         document.getElementById("grand_total").innerHTML = parseFloat(grand_total).toFixed(2);
+                    }
+
+                    function render_additional(additional_items) {
+                        var html = '', html1 = '<br /><p class="no-margin bold primary">Additional items</p>';
+                        for (var key in additional_items) {
+                            if (additional_items[key].additional_name != undefined) {
+                                html += `<div class="additional-items-container width-60p flex space-between">
+                                            <p class='cart-details'>` + additional_items[key].proper_name + `</h3> 
+                                            <p class='cart-details'>₱` + parseFloat(additional_items[key].additional_price).toFixed(2) + ` x ` + additional_items[key].additional_qty + `</p>
+                                        </div>`;
+                            } else {
+                                html = '';
+                            }
+                        }
+
+                        html = html == '' ? html : html1 + html;
+                        return html;
                     }
 
                     function remove_item(id) {
@@ -246,15 +390,33 @@
 
                         var cart = (typeof getCookie('shopping-cart') == 'string') ? JSON.parse(getCookie('shopping-cart')) : getCookie('shopping-cart');
                         var cart_array = [];
+                        cart = JSON.parse(cart);
                         for (var key in cart) {
-                            cart_array.push(JSON.parse(cart[key]));                                
+                            cart_array.push(cart[key]);                                
                         }
                         var filtered = cart_array.filter(item => item.id != id);
+                       
                         setCookie("shopping-cart", JSON.stringify(filtered));
+
                         if (getCookie("totalqty") < 1) {
                             document.getElementById('cart_count').style.display = 'none';
                             document.getElementById("cart_items").innerHTML = '<h4 class="text-center">Your cart is empty. Add items first.</h4>';
+                            document.querySelector(".grand-total").style.display = "none";
+
+                            clear_cookies();
                         }
+                    }
+
+                    function clear_cookies() {
+                        // const cookies = document.cookie.split(";");
+
+                        // for (let i = 0; i < cookies.length; i++) {
+                        //     const cookie = cookies[i];
+                        //     const eqPos = cookie.indexOf("=");
+                        //     const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                        //     document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                        // }
+                        document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
                     }
 
                     function close_modal(modal) {
@@ -332,18 +494,18 @@
             </script>
             <hr class="hr--clear"/>
         </section>
-    </main>
-    <footer>
-        <div class="container flex align-center space-between">
-            <div class="copyright padding-top-5"><p class="lx-small light no-margin primary">© 2023. All Rights Reserved.</p></div>
-            <div class="footer-menu">
-                <ul class="footer-list no-margin">
-                    <li><a href="/" class="light">Home</a></li>
-                    <li><a href="#best-sellers" class="light">Menu</a></li>
-                    <li class="light">Cart</li>
-                </ul>
+        <footer>
+            <div class="container flex align-center space-between">
+                <div class="copyright padding-top-5"><p class="lx-small light no-margin primary">© 2023. All Rights Reserved.</p></div>
+                <div class="footer-menu">
+                    <ul class="footer-list no-margin">
+                        <li><a href="/" class="light">Home</a></li>
+                        <li><a href="#best-sellers" class="light">Menu</a></li>
+                        <li class="light">Cart</li>
+                    </ul>
+                </div>
             </div>
-        </div>
-    </footer>
+        </footer>
+    </main>
 </body>
 </html>

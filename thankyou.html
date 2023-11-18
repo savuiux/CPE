@@ -12,7 +12,7 @@
 <body>
     <header id="main-header" class="container">
         <div class="logo">
-            <img src="assets/images/Logo.png" width="200"/>
+            <img src="assets/images/Logo.png" width="200" class="pointer" onclick="reset();"/>
         </div>
 
         <div class="side-menu">
@@ -39,6 +39,7 @@
                     <h3 id="order_number"></h3>
                     <hr class="details-border"/>
                     <div id="cart_items" class="width-40p"></div>
+                    <hr class="hr--clear" />
                     <div class="shipping">
                         <h3><span class="shipping-title">Shipping: </span><span id="shipping_cost"></span></h3>
                     </div>
@@ -82,52 +83,72 @@
                     location.href = "/index.html#best-sellers";
                     remove_cookies();
                 }
+
+                function render_additional(additional_items) {
+                    var html = '', html1 = '<br /><p class="bold primary">Additional items</p>';
+                    for (var key in additional_items) {
+                        if (additional_items[key].additional_name != undefined) {
+                            html += `<div class="additional-items-container width-60p flex space-between">
+                                        <p class='cart-details'>` + additional_items[key].proper_name + `</h3> 
+                                        <p class='cart-details'>₱` + parseFloat(additional_items[key].additional_price).toFixed(2) + ` x ` + additional_items[key].additional_qty + `</p>
+                                    </div>`;
+                        } else {
+                            html = '';
+                        }
+                    }
+
+                    html = html == '' ? html : html1 + html;
+                    return html;
+                }
+
                 document.getElementById("fname").innerHTML = getCookie("fname");
                 document.getElementById("shipping_cost").innerHTML = "₱" + getCookie("shipping_cost");
                 document.getElementById("order_number").innerHTML = "Order #" + parseInt(order_number.toFixed(8));
                 document.getElementById("address").innerHTML = getCookie("saddress") + "<br />" + getCookie("baddress") + "<br />" + getCookie("caddress") + "<br />" +getCookie("paddress") + "<br />" + getCookie("zaddress");
 
-                var cart = (typeof getCookie('shopping-cart') == 'string') ? JSON.parse(getCookie('shopping-cart')) : getCookie('shopping-cart');
-                var html = "";
-                var grand_total = 0;
-                var price = 0;
-                var quantity = 0;
-                var sub_total = 0;
-                cart.forEach(function(item) {
-                    var cart_item = (typeof item == 'string') ? JSON.parse(item) : item;
-                    price = parseFloat(cart_item.price);
-                    quantity = parseInt(cart_item.qty);
-                    sub_total = price * quantity;
+                if (getCookie('shopping-cart')) {
+                    var html = '', grand_total = 0;
+                    var cart_item = (typeof getCookie('shopping-cart') == 'string') ? JSON.parse(JSON.parse(getCookie('shopping-cart'))) : getCookie('shopping-cart');
 
-                    html += `<div class='cart-item-container' id="cart-item-`+ cart_item.id +`">
-                                <div class='item-image'><img width='75' src=` + cart_item.image + ` /></div>
-                                <div class='item-details'>
-                                    <h3 class='cart-item-name'>` + cart_item.name + `</h3>
-                                    <p class='cart-details'>₱` + price.toFixed(2) + ` x ` + quantity + `</p>
-                                </div>
-                                <div class='item-price'>
-                                    <h3 class='no-margin'>₱` + sub_total.toFixed(2) + `</h3>
-                                </div>
-                            </div>`;
+                    for (var key in cart_item) {
+                        price = parseFloat(cart_item[key].price);
+                        quantity = parseInt(cart_item[key].quantity);
+                        sub_total = cart_item[key].final_price;
 
-                    grand_total += sub_total;
-                });
-                document.getElementById('cart_items').innerHTML = html;
-                document.getElementById("grand_total").innerHTML = "₱" + parseFloat(grand_total).toFixed(2);
+                        html += `<div class='cart-item-container' id="cart-item-`+ cart_item[key].id +`">
+                                    <div class='item-image'><img width='75' src=` + cart_item[key].image + ` /></div>
+                                    <div class='item-details'>
+                                        <h3 class='cart-item-name'>` + cart_item[key].name + `</h3>
+                                        <p class='cart-details'>₱` + price.toFixed(2) + ` x ` + quantity + `</p>`+ render_additional(cart_item[key]) +`                                                    
+                                    </div>
+                                    <div class='item-price'>
+                                        <h3 class='no-margin'>₱` + sub_total.toFixed(2) + `</h3>
+                                    </div>
+                                </div>`;
+
+                        grand_total += sub_total;
+                    }
+
+                    grand_total = grand_total + parseFloat(getCookie("shipping_cost"));
+
+                    document.getElementById('cart_items').innerHTML = html;
+                    document.getElementById("grand_total").innerHTML = "₱" + parseFloat(grand_total).toFixed(2);
+
+                }
             </script>
             <br>
         </section>
-    </main>
-    <hr class="hr--clear" />
-    <footer>
-        <div class="container flex align-center space-between">
-            <div class="copyright padding-top-5"><p class="lx-small light no-margin primary">© 2023. All Rights Reserved.</p></div>
-            <div class="footer-menu">
-                <ul class="footer-list no-margin">
-                    <li><a href="/" class="light">Home</a></li>
-                    <li><a href="/index.html/#best-sellers" class="light">Menu</a></li>
-                </ul>
+        <hr class="hr--clear" />
+        <footer>
+            <div class="container flex align-center space-between">
+                <div class="copyright padding-top-5"><p class="lx-small light no-margin primary">© 2023. All Rights Reserved.</p></div>
+                <div class="footer-menu">
+                    <ul class="footer-list no-margin">
+                        <li><a href="/" class="light">Home</a></li>
+                        <li><a href="/index.html/#best-sellers" class="light">Menu</a></li>
+                    </ul>
+                </div>
             </div>
-        </div>
-    </footer>
+        </footer>
+    </main>
 </body>
